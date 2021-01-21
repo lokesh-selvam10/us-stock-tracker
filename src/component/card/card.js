@@ -51,7 +51,7 @@ class CardComponent extends React.Component {
       <Grid>
         {this.props.data.map(value => (
           <Grid key={value.symbol} container direction="row" justify="center" alignItems="center">
-            <Grid item xs={8} sm={6} style={{ boxShadow: "0 4px 8px 0 rgba(5,5,5,5.2)", margin: "2%" }}>
+            <Grid item xs={8} sm={6} style={{ boxShadow: "0 4px 8px 0 rgba(5,5,5,5.2)", margin: "1%", marginLeft: "-9%" }}>
               <Card key={value.symbol} className="root" style={{ backgroundColor: this.props.active.background ? "#1b2530" : "" }}>
                 <CardContent >
                   <CloseIcon onClick={() => this.handleDelete(value.symbol, value.name)} style={{ float: "right", cursor: "pointer", color: this.props.active.color }} />
@@ -65,10 +65,10 @@ class CardComponent extends React.Component {
                 <ApexChart chartDate={this.props.chartData} color={this.props.active.color}></ApexChart>
                 <Grid container item xs={12} direction="column" className="ohlc">
                   <Grid container item xs={12} direction="row">
-                    <Grid item xs={6} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>Open-</span>{value.open}</Grid>
-                    <Grid item xs={6} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>Low-</span>{value.low}</Grid>
+                    <Grid item xs={4} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>Open-</span>{value.open}</Grid>
+                    <Grid item xs={4} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>Low-</span>{value.low}</Grid>
+                    <Grid item xs={4} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>High-</span>{value.high}</Grid>
                   </Grid>
-                  <Grid item xs={12} className="ohlc" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}><span style={{ fontWeight: "500", color: this.props.active.background ? "#79B8F3" : "#000" }}>High-</span>{value.high}</Grid>
                 </Grid>
               </Card>
             </Grid>

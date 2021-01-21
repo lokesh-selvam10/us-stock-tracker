@@ -135,9 +135,10 @@ class searchSelect extends React.Component {
 
                 fetchStock(this.state.symbol, "3m").then(res => { this.setState({ chartData: res, data: lastestprice, loader: false }, () => { this.props.onSubmit(this.state.data, this.state.chartData); }) })
             }).catch(error => {
-                this.props.enqueueSnackbar("No internet", {
+                this.props.enqueueSnackbar("Couldn't find the data", {
                     variant: 'warning',
                 });
+                this.setState({loader:false})
             })
         }
         else {
@@ -153,8 +154,8 @@ class searchSelect extends React.Component {
     render() {
         const { classes } = this.props;
         return (
-            <Grid container direction="row" justify="space-evenly" alignItems="flex-start">
-                <Grid item xs={8} style={{ paddingLeft: "30%" }}>
+            <Grid container direction="row" justify="space-evenly" alignItems="flex-start" >
+                <Grid container item xs={8} style={{ paddingLeft: "20%" }}>
                     <Autocomplete
                         id="stockselect"
                         style={{ width: 600 }}
@@ -189,7 +190,7 @@ class searchSelect extends React.Component {
                         )}
                     />
                 </Grid>
-                <Grid item xs={4} style={{ paddingTop: "8px" }}>
+                <Grid item xs={4} style={{ paddingTop: "8px" }} >
                     {this.state.loader ? <CircularProgress size={28} /> :
                         <Button variant="outlined" color="primary" className="button" disabled={this.state.button} onClick={this.handleSearch} classes={{ outlinedPrimary: classes.outlinedPrimary }}>Search</Button>
                     }
