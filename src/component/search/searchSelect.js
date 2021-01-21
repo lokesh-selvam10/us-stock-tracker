@@ -1,5 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
+import { Link } from 'react-scroll'
 
 import iex from "../config/iex.js"
 import options from './searchOptions'
@@ -111,6 +112,7 @@ class searchSelect extends React.Component {
             chartData: [],
             button: true
         }
+        this.scrollref = React.createRef()
     }
     handleChange(event, value) {
         return value !== null && this.setState({ symbol: value.Symbol, name: value.Name, button: false })
@@ -133,24 +135,41 @@ class searchSelect extends React.Component {
                 lastestprice["name"] = this.state.name
                 // console.log(lastestprice)
 
-                fetchStock(this.state.symbol, "3m").then(res => { this.setState({ chartData: res, data: lastestprice, loader: false }, () => { this.props.onSubmit(this.state.data, this.state.chartData); }) })
+                fetchStock(this.state.symbol, "3m").then(res => {
+                    this.setState({ chartData: res, data: lastestprice, loader: false }, () => {
+                        this.props.onSubmit(this.state.data, this.state.chartData);
+                        setTimeout(() => {
+                            window.scroll({
+                                top: document.body.offsetHeight,
+                                left: 0,
+                                behavior: 'smooth',
+                            });
+                        }, 1000);
+
+                        this.props.enqueueSnackbar(` ${this.state.name}(${this.state.symbol}) added`, {
+                            variant: 'info',
+                        });
+                    })
+                })
             }).catch(error => {
                 this.props.enqueueSnackbar("Couldn't find the data", {
                     variant: 'warning',
                 });
-                this.setState({loader:false})
+                this.setState({ loader: false })
             })
         }
-        else {
-            this.props.enqueueSnackbar(this.state.name + "is already added", {
-                variant: 'info',
-            });
-        }
+        // else {
+        //     this.props.enqueueSnackbar(this.state.name + "is already added", {
+        //         variant: 'info',
+        //     });
+        // }
     }
     componentDidMount() {
-        let data = fetchStock("TXG", "3m").then(res => { return res })
+        fetchStock("TXG", "3m").then(res => { return res })
         // console.log(data)
     }
+
+
     render() {
         const { classes } = this.props;
         return (
@@ -192,11 +211,13 @@ class searchSelect extends React.Component {
                 </Grid>
                 <Grid item xs={4} style={{ paddingTop: "8px" }} >
                     {this.state.loader ? <CircularProgress size={28} /> :
-                        <Button variant="outlined" color="primary" className="button" disabled={this.state.button} onClick={this.handleSearch} classes={{ outlinedPrimary: classes.outlinedPrimary }}>Search</Button>
+                        <Link to={this.state.symbol} spy={true} smooth={true}>
+                            <Button variant="outlined" color="primary" className="button" disabled={this.state.button} ref={this.scrollref} onClick={this.handleSearch} classes={{ outlinedPrimary: classes.outlinedPrimary }}>
+                                Search
+                            </Button>
+                        </Link>
                     }
                 </Grid>
-
-
             </Grid>
         )
     }

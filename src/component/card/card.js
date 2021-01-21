@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from "react-redux";
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 
 import './card.css'
 import ApexChart from "../chart/candleChart"
@@ -52,8 +52,8 @@ class CardComponent extends React.Component {
         {this.props.data.map(value => (
           <Grid key={value.symbol} container direction="row" justify="center" alignItems="center">
             <Grid item xs={8} sm={6} style={{ boxShadow: "0 4px 8px 0 rgba(5,5,5,5.2)", margin: "1%", marginLeft: "-9%" }}>
-              <Card key={value.symbol} className="root" style={{ backgroundColor: this.props.active.background ? "#1b2530" : "" }}>
-                <CardContent >
+              <Card key={value.symbol} id={value.symbol}className="root" style={{ backgroundColor: this.props.active.background ? "#1b2530" : "" }}>
+                <CardContent style={{padding:"10px"}}>
                   <CloseIcon onClick={() => this.handleDelete(value.symbol, value.name)} style={{ float: "right", cursor: "pointer", color: this.props.active.color }} />
                   <Grid item className="title" style={{ color: this.props.active.background ? "#79B8F3" : "#000" }}>{value.symbol}-{value.name}</Grid>
                   <Grid item className="closeprice" style={{ color: this.props.active.background ? "#8197a4" : "#000" }}>{value.close}</Grid>
