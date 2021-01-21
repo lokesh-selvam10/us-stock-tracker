@@ -85,7 +85,7 @@ const useStyles = themes => ({
         "& .MuiOutlinedInput-notchedOutline": {
             borderColor: "#3F51B5"
         },
-      
+
     },
     popper: {
         "&.MuiAutocomplete-listbox": {
@@ -131,9 +131,9 @@ class searchSelect extends React.Component {
                 lastestprice = data[data.length - 1]
                 lastestprice["symbol"] = this.state.symbol
                 lastestprice["name"] = this.state.name
-                console.log(lastestprice)
+                // console.log(lastestprice)
 
-                fetchStock(this.state.symbol, "3m").then(res => { this.setState({ chartData: res, data: lastestprice, loader: false }, () => { console.log(this.state); this.props.onSubmit(this.state.data, this.state.chartData); }) })
+                fetchStock(this.state.symbol, "3m").then(res => { this.setState({ chartData: res, data: lastestprice, loader: false }, () => { this.props.onSubmit(this.state.data, this.state.chartData); }) })
             }).catch(error => {
                 this.props.enqueueSnackbar("No internet", {
                     variant: 'warning',
@@ -141,16 +141,14 @@ class searchSelect extends React.Component {
             })
         }
         else {
-            console.log("sdfsdfsd")
             this.props.enqueueSnackbar(this.state.name + "is already added", {
                 variant: 'info',
             });
         }
     }
     componentDidMount() {
-        console.log("didmount")
         let data = fetchStock("TXG", "3m").then(res => { return res })
-        console.log(data)
+        // console.log(data)
     }
     render() {
         const { classes } = this.props;
