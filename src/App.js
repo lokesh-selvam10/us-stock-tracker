@@ -4,11 +4,11 @@ import './App.css';
 
 import { normalTheme, darkTheme } from './actions'
 
-import { Grid,Switch } from "@material-ui/core";
+import { Grid, Switch } from "@material-ui/core";
+import ExpandLessIcon from '@material-ui/icons/ExpandLess';
 import { ThemeProvider } from 'styled-components';
 import { getThemes } from "./getThemes";
 import { Header } from "./styles"
-
 
 import { SearchSelectComp } from './component/search/searchSelect'
 import { CardComp } from './component/card/displayCard'
@@ -35,6 +35,13 @@ function App({ theme, active }) {
 
     const handlechange = () => {
         setPush(!push)
+    }
+    const handleScroll = () => {
+        window.scroll({
+            top: 0,
+            left: 0,
+            behavior: "smooth",
+        })
     }
     useEffect(() => {
         push ? theme("darkTheme") : theme("normalTheme")
@@ -67,6 +74,20 @@ function App({ theme, active }) {
                                 setData(val)
                             }}></CardComp>
                         }
+                        {data.length > 1 &&
+                            <ExpandLessIcon style={{
+                                cursor:'pointer',
+                                width: 66,
+                                height: 66,
+                                borderRadius: 33,
+                                justifyContent: 'center',
+                                alignItems: 'center',
+                                position: 'fixed',
+                                bottom: 20,
+                                right: 20
+                            }}
+                                onClick={handleScroll}>test</ExpandLessIcon>}
+
                     </Header>
                 </ThemeProvider>
             </ChartDataContext.Provider>
