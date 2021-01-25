@@ -1,81 +1,82 @@
-import React from 'react' ;
+import React, { useEffect, useState } from 'react';
 import { connect } from "react-redux";
 import './App.css';
 
-import { CardComp } from './component/card/card'
-import { SearchSelect } from './component/search/searchSelect'
 import { normalTheme, darkTheme } from './actions'
 
-import { Grid } from "@material-ui/core";
-import Switch from '@material-ui/core/Switch';
+import { Grid,Switch } from "@material-ui/core";
 import { ThemeProvider } from 'styled-components';
 import { getThemes } from "./getThemes";
 import { Header } from "./styles"
 
+
+import { SearchSelectComp } from './component/search/searchSelect'
+import { CardComp } from './component/card/displayCard'
+
+export const ChartDataContext = React.createContext()
+
 function mapStateToProps(state) {
-  return {
-    active: state.theme
-  }
+    return {
+        active: state.theme
+    }
 }
 
 function mapDispatchToProps(dispatch) {
-  return {
-    theme: theme => { theme === "darkTheme" ? dispatch(darkTheme()) : dispatch(normalTheme()) }
-  };
+    return {
+        theme: theme => { theme === "darkTheme" ? dispatch(darkTheme()) : dispatch(normalTheme()) }
+    };
 }
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      data: [],
-      themeType: "basic",
-      push: false,
-      dataAfterDeleting: [],
-      chartData: []
+function App({ theme, active }) {
+
+    const [data, setData] = useState([]);
+    const [push, setPush] = useState(false);
+    const [chartData, setChartData] = useState([]);
+
+    const handlechange = () => {
+        setPush(!push)
     }
+    useEffect(() => {
+        push ? theme("darkTheme") : theme("normalTheme")
 
-  }
+    }, [push])
 
-  handlechange = () => {
-    this.setState({ push: !this.state.push }, () => { this.state.push ? this.props.theme("darkTheme") : this.props.theme("normalTheme") })
-  }
-
-  render() {
     return (
-      <Grid item >
-        <ThemeProvider theme={getThemes(this.props.active.theme)}>
-          <Header>
-            <Grid className="pushButton">
-              <Switch style={{ float: "right" }} onChange={this.handlechange}></Switch>
-            </Grid>
-            <Grid >
-              <SearchSelect
-                data={this.state.data}
-                onSubmit={(latestprice, chartData) =>
-                  this.setState({
-                    data: [...this.state.data, latestprice],
-                    chartData: chartData
-                  })
-                }
-              ></SearchSelect>
-            </Grid>
-            {this.state.data.length > 0 &&
-              <CardComp data={this.state.data} chartData={this.state.chartData} loader={this.state.loader} deleteCard={val => {
-                this.setState({
-                  dataAfterDeleting: val
-                })
-              }}></CardComp>
-            }
-          </Header>
-        </ThemeProvider>
-      </Grid>
+        <Grid item >
+            <ChartDataContext.Provider value={chartData}>
+                <ThemeProvider theme={getThemes(active.theme)}>
+                    <Header>
+                        <Grid className="pushButton">
+                            <Switch style={{ float: "right" }} onChange={handlechange}></Switch>
+                        </Grid>
+                        <Grid >
+                            <SearchSelectComp
+                                data={data}
+                                onSubmit={(latestprice, apiChartData) => {
+                                    let copydata = data
+                                    copydata.push(latestprice)
+                                    setData(copydata)
+                                    setChartData(apiChartData)
+                                }
+                                }
+                            ></SearchSelectComp>
+                        </Grid>
+                        {
+                            data.length > 0 &&
+                            <CardComp tempchart={chartData} data={data} deleteCard={val => {
+                                setData(val)
+                            }}></CardComp>
+                        }
+                    </Header>
+                </ThemeProvider>
+            </ChartDataContext.Provider>
+        </Grid >
 
     );
-  }
+
 }
 
 export default connect(
-  mapStateToProps,
-  mapDispatchToProps
+    mapStateToProps,
+    mapDispatchToProps
 )(App);;

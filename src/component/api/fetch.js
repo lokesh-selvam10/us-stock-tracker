@@ -8,33 +8,30 @@ export const fetchStock = async (symbol, timeperiod) => {
     let close = [];
     let date = [];
 
-    const fetchPromise = await axios.get(API_Call).then(response => {
-        // console.log(response.data)
-        return response.data
-    }).then(data => {
-        for (var key in data) {
-            open.push(data[key]["open"]);
-            high.push(data[key]["high"])
-            low.push(data[key]["low"])
-            close.push(data[key]["close"])
-            date.push(data[key]["date"])
-        }
+    //Fetching 3m data
+    let chartData = await axios.get(API_Call)
+    chartData = await chartData.data
+    for (var key in chartData) {
+        open.push(chartData[key]["open"]);
+        high.push(chartData[key]["high"])
+        low.push(chartData[key]["low"])
+        close.push(chartData[key]["close"])
+        date.push(chartData[key]["date"])
+    }
 
-        let temp = [];
-        for (var id in open) {
-            let openclosePrice = [];
-            let ohlc = {};
-            openclosePrice.push(open[id])
-            openclosePrice.push(high[id])
-            openclosePrice.push(low[id])
-            openclosePrice.push(close[id])
-            ohlc["y"] = openclosePrice
-            ohlc["x"] = new Date(date[id])
-            temp.push(ohlc)
-        }
-        return temp
-    });
-
-    return fetchPromise
-
+    let temp = [];
+    for (var id in open) {
+        let openclosePrice = [];
+        let ohlc = {};
+        openclosePrice.push(open[id])
+        openclosePrice.push(high[id])
+        openclosePrice.push(low[id])
+        openclosePrice.push(close[id])
+        ohlc["y"] = openclosePrice
+        ohlc["x"] = new Date(date[id])
+        temp.push(ohlc)
+    }
+    let arrangedChartData = temp
+    return arrangedChartData
+   
 }

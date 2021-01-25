@@ -1,108 +1,98 @@
-import React from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import ReactApexChart from 'react-apexcharts'
-class ApexChart extends React.Component {
-    constructor(props) {
-        super(props);
+import { ChartDataContext } from '../../App'
 
-        this.state = {
-            series: [],
-            options: {
-                chart: {
-                    type: 'candlestick',
-                    height: 350
-                },
-                title: {
-                    text: 'CandleStick Chart',
-                    align: 'left',
-                    style: {
-                        fontSize: '14px',
-                        fontWeight: 'bold',
-                        color: this.props.color
-                    },
-                },
-                xaxis: {
-                    type: 'datetime',
-                    labels: {
-                        style: {
-                            fontSize: '14px',
-                            colors: this.props.color
-                        }
-                    }
-                },
-                yaxis: {
-                    tooltip: {
-                        enabled: true
-                    },
-                    labels: {
-                        style: {
-                            fontSize: '14px',
-                            colors: this.props.color
-                        }
-                    }
-                },
-                tooltip: {
-                    theme: this.props.color === "#fff" ? "dark" : "light"
-                },
+function CandleChartFunc({ color }) {
+    const chartData = useContext(ChartDataContext)
 
+    const [series, setSeries] = useState([]);
+    const [options, setOptions] = useState({
+        chart: {
+            type: 'candlestick',
+            height: 350
+        },
+        title: {
+            text: 'CandleStick Chart',
+            align: 'left',
+            style: {
+                fontSize: '14px',
+                fontWeight: 'bold',
+                color: color
             },
-        };
-    }
+        },
+        xaxis: {
+            type: 'datetime',
+            labels: {
+                style: {
+                    fontSize: '14px',
+                    colors: color
+                }
+            }
+        },
+        yaxis: {
+            tooltip: {
+                enabled: true
+            },
+            labels: {
+                style: {
+                    fontSize: '14px',
+                    colors: color
+                }
+            }
+        },
+        tooltip: {
+            theme: color === "#fff" ? "dark" : "light"
+        },
+    });
 
-    componentDidMount = () => {
+    useEffect(() => {
         let series = []
         let temp = {}
-        temp["data"] = this.props.chartDate;
+        temp["data"] = chartData;
         series.push(temp)
-        this.setState({ series: series })
-
-    }
-    componentDidUpdate = () => {
-        if (this.state.options.title.style.color !== this.props.color) {
-            this.setState(prevState => ({
-                options: {
-                    ...prevState.options,
-                    title: {
-                        ...prevState.options.title,
-                        style: {
-                            fontSize: '14px',
-                            color: this.props.color
-                        }
-                    },
-                    xaxis: {
-                        ...prevState.options.xaxis,
-                        labels: {
-                            style: {
-                                fontSize: '14px',
-                                colors: this.props.color
-                            }
-                        }
-                    },
-                    yaxis: {
-                        ...prevState.options.yaxis,
-                        labels: {
-                            style: {
-                                fontSize: '14px',
-                                colors: this.props.color
-                            }
-                        }
-                    },
-                    tooltip: {
-                        ...prevState.options.tooltip,
-                        theme: this.props.color === "#fff" ? "dark" : "light"
-                    }
-
+        setSeries(series)
+    }, [])
+    useEffect(() => {
+        setOptions(prevState => ({
+            ...prevState,
+            title: {
+                ...prevState.title,
+                style: {
+                    fontSize: '14px',
+                    color: color
                 }
-            }))
-        }
-    }
+            },
+            xaxis: {
+                ...prevState.xaxis,
+                labels: {
+                    style: {
+                        fontSize: '14px',
+                        colors: color
+                    }
+                }
+            },
+            yaxis: {
+                ...prevState.yaxis,
+                labels: {
+                    style: {
+                        fontSize: '14px',
+                        colors: color
+                    }
+                }
+            },
+            tooltip: {
+                ...prevState.tooltip,
+                theme: color === "#fff" ? "dark" : "light"
+            }
+        }))
+    }, [color])
 
-    render() {
-        return (
-            <div >
-                <ReactApexChart options={this.state.options} series={this.state.series} type="candlestick" height={350} />
-            </div>
-        )
-    }
+    return (
+        <div >
+            <ReactApexChart options={options} series={series} type="candlestick" height={350} />
+        </div>
+    )
+
 }
 
-export default ApexChart;
+export default CandleChartFunc;
